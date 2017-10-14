@@ -155,25 +155,10 @@ customers_2015 <- data %>%
 
 # Aplicamos los modelos para predecir:
 # 1) La probabilidad de que un cliente siga activo
-customers_2015$prob_predicted    = predict(object = prob.model, newdata = customers_2015, type = "probs")
-
-# 2) Estimar los ingresos que realizarán
-customers_2015$revenue_predicted = exp(predict(object = amount.model, newdata = customers_2015))
-
-# 3) Realizar un scoring 
-customers_2015$score_predicted   = customers_2015$prob_predicted * customers_2015$revenue_predicted
-
-summary(customers_2015$prob_predicted)
-summary(customers_2015$revenue_predicted)
-summary(customers_2015$score_predicted)
-hist(customers_2015$score_predicted)
-
-
-
 predict(object = prob.model, newdata = customers_2015, type = "probs") %>% head(10)
 
+# 2) Estimar los ingresos que realizarán
 predict(object = amount.model, newdata = customers_2015) %>% exp() %>%  head( 10)
-
 
 customers_2015 <- customers_2015 %>% 
   mutate(prob_predicted = predict(object = prob.model, newdata = customers_2015, type = "probs"),
@@ -185,9 +170,8 @@ summary(customers_2015$revenue_predicted)
 summary(customers_2015$score_predicted)
 hist(customers_2015$score_predicted)
 
-# How many customers have an expected revenue of more than $50
-z = which(customers_2015$score_predicted > 50)
-print(length(z))
+
+# ¿Cuántos clientes esperamos que gasten más de 50€?
 
 customers_2015 %>% 
   filter(score_predicted > 50) %>% 
