@@ -1,8 +1,11 @@
-
-# install.packages('tidyverse')
+if(!require(tidyverse)) { install.packages('tidyverse', dependencies = T) }
 library(tidyverse)
 
+if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
+library(sqldf)
+
 if(!require(tidyr)) { install.packages('tidyr', dependencies = T) }
+library(sqldf)
 
 if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
 library(sqldf)
@@ -50,16 +53,6 @@ hist(customers_2015$amount, breaks = 100)
 
 
 # SEGMENTACION GERENCIAL --------------------------------------------------
-
-
-
-# --- CODING A MANAGERIAL SEGMENTATION ---------------------
-
-
-# Simple 2-segment solution based on recency alone
-# customers_2015$segment = ifelse(test = customers_2015$recency > 365*3, yes = "inactive", no = "NA")
-# table(customers_2015$segment)
-# aggregate(x = customers_2015[, 2:5], by = list(customers_2015$segment), mean)
 
 # Primeros pasos
 
@@ -230,9 +223,6 @@ head(revenue_2015)
 summary(revenue_2015)
 
 
-# Merge 2015 customers and 2015 revenue (the wrong way)
-actual = merge(customers_2015, revenue_2015)
-
 # Unimos el data frame de clientes del 2015 con los ingresos que han generado en 2015
 head(customers_2015, 1)
 head(revenue_2015, 1)
@@ -245,7 +235,6 @@ nrow(revenue_2015)
 nrow(actual)
 
 # Unimos el data frame de clientes con los ingresos (Forma correcta)
-
 actual <- left_join(customers_2015, revenue_2015)
 nrow(actual)
 
