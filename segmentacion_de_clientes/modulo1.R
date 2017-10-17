@@ -192,10 +192,6 @@ fit$centers * attr(new_data, 'scaled:scale') + attr(new_data, 'scaled:center')
 plot(new_data_sample,col=fit$cluster,pch=15, main="Clustering", xlab = "Recency", ylab = "Frecuency")
 points(fit$centers,pch=4, cex = 1.9, col=viridis(desired_segments))
 
-
-clusplot(new_data_sample, fit$cluster, color=TRUE, shade=TRUE, labels=0, lines=0, col.p=viridis(4), main="Clustering results")
-
-
 customers_asigned_clusters <- data.frame(customers[sample, ], segment=fit$cluster)
 
 head(customers_asigned_clusters)
@@ -207,3 +203,7 @@ customers_asigned_clusters %>%
   summarise(recency = mean(recency), frequency = mean(frequency), amount = mean(amount), num_customers=n())
 
 
+
+# CASO PRACTICO APLICACION SEGMENTACION KMEANS ----------------------------
+
+# kmeans_parte1.R y kmeans_parte2.R
