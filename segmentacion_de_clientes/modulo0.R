@@ -1,5 +1,10 @@
+##########################################################################
+# Jose Ramón Cajide, 2017-10
+# Customer Analytics: Segmentación de clientes
+##########################################################################
 
-# install.packages('tidyverse')
+
+install.packages('tidyverse')
 library(tidyverse)
 
 if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
@@ -13,14 +18,9 @@ head(data)
 colnames(data) = c('customer_id', 'purchase_amount', 'date_of_purchase')
 head(data)
 
-# No necesario:
-# Indicamos que la variable date_of_purchase es del tipo fecha
-# data$date_of_purchase = as.Date(data$date_of_purchase, "%Y-%m-%d")
-
 # Añadimos una nueva variable con el año de compra
 data$year_of_purchase = as.numeric(format(data$date_of_purchase, "%Y"))
 head(data)
-
 
 
 # Exploramos los datos ----------------------------------------------------
@@ -75,6 +75,6 @@ x <- data %>%
   summarise(counter = n(), 
             avg_amount = mean(purchase_amount),
             sum_amount = sum(purchase_amount) 
-            ) -> x
+            ) 
 
 head(x)

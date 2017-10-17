@@ -1,11 +1,24 @@
+##########################################################################
+# Jose Ramón Cajide, 2017-10
+# Customer Analytics: Segmentación de clientes
+##########################################################################
 
-# install.packages('tidyverse')
+if(!require(tidyverse)) { install.packages('tidyverse', dependencies = T) }
 library(tidyverse)
 
 if(!require(tidyr)) { install.packages('tidyr', dependencies = T) }
+library(tidyr)
 
 if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
 library(sqldf)
+
+if(!require(viridis)) { install.packages('viridis', dependencies = T) }
+library(viridis)
+
+if(!require(cluster)) { install.packages('cluster', dependencies = T) }
+library(cluster)
+
+
 
 # Cargamos los datos de compras en el data frame "data"
 data <- read_tsv("purchases.txt", col_names = FALSE)
@@ -51,6 +64,10 @@ hist(customers$amount, breaks = 100)
 
 
 
+# PPT ---------------------------------------------------------------------
+
+
+
 # Segmentación estadística de clientes ------------------------------------
 
 
@@ -84,6 +101,9 @@ hist(new_data$amount)
 # Necesitamos centrar y escalar los datos, estandarizar las unidades para hacerlas comparables
 new_data = scale(new_data)
 head(new_data)
+
+
+# PPT ---------------------------------------------------------------------
 
 # Calculamos la distancia euclídea
 # OJO: Esto puede generar un error por falta de memoria
@@ -148,3 +168,42 @@ p1 <- p1+ ggtitle("Frecuencia vs Recencia")+theme_bw()
 p1 <- p1 + theme(axis.text=element_text(size=8), axis.title=element_text(size=8),plot.title = element_text(size=10))
 p1 <- p1 +guides(colour=FALSE)
 p1
+
+
+# PPT ---------------------------------------------------------------------
+
+# SEGMENTACIÓN KMEANS -----------------------------------------------------
+
+
+wssse <- (nrow(new_data_sample)-1)*sum(apply(new_data_sample,2,var))
+for(i in 2:15) wssse[i]<- sum(fit=kmeans(new_data_sample,centers=i,15)$withinss)
+plot(1:15,wssse,type="b",main="Testing for 15 clusters",xlab="Number of clusters",ylab="Within Set Sum of Squared Error", col=viridis(10))
+
+desired_segments <- 5
+
+fit <- kmeans(new_data_sample, desired_segments)
+
+fit$centers
+
+attributes(new_data)
+
+fit$centers * attr(new_data, 'scaled:scale') + attr(new_data, 'scaled:center') 
+
+plot(new_data_sample,col=fit$cluster,pch=15, main="Clustering", xlab = "Recency", ylab = "Frecuency")
+points(fit$centers,pch=4, cex = 1.9, col=viridis(desired_segments))
+
+
+clusplot(new_data_sample, fit$cluster, color=TRUE, shade=TRUE, labels=0, lines=0, col.p=viridis(4), main="Clustering results")
+
+
+customers_asigned_clusters <- data.frame(customers[sample, ], segment=fit$cluster)
+
+head(customers_asigned_clusters)
+
+# Comprobamos las características de cada segmento
+customers_asigned_clusters %>% 
+  select(-customer_id) %>% 
+  group_by(segment) %>% 
+  summarise(recency = mean(recency), frequency = mean(frequency), amount = mean(amount), num_customers=n())
+
+

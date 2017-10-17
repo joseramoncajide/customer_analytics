@@ -1,11 +1,13 @@
+##########################################################################
+# Jose Ramón Cajide, 2017-10
+# Customer Analytics: Segmentación de clientes
+##########################################################################
+
 if(!require(tidyverse)) { install.packages('tidyverse', dependencies = T) }
 library(tidyverse)
 
-if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
-library(sqldf)
-
 if(!require(tidyr)) { install.packages('tidyr', dependencies = T) }
-library(sqldf)
+library(tidyr)
 
 if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
 library(sqldf)
@@ -149,6 +151,9 @@ customers_2015 %>%
 
 
 
+# PPT ---------------------------------------------------------------------
+
+
 # SEGMENTACION RETROSPECTIVA ----------------------------------------------
 
 
@@ -202,7 +207,7 @@ customers_2014 %>%
   summarise_all(mean)
 
 
-
+# PPT ---------------------------------------------------------------------
 
 # CALCULAMOS LOS INGRESOS POR SEGMENTO ------------------------------------
 

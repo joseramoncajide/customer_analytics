@@ -1,8 +1,13 @@
+##########################################################################
+# Jose Ramón Cajide, 2017-10
+# Customer Analytics: Segmentación de clientes
+##########################################################################
 
-# install.packages('tidyverse')
+if(!require(tidyverse)) { install.packages('tidyverse', dependencies = T) }
 library(tidyverse)
 
 if(!require(tidyr)) { install.packages('tidyr', dependencies = T) }
+library(tidyr)
 
 if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
 library(sqldf)
@@ -101,9 +106,9 @@ coef <- summary(prob.model)$coefficients
 std  <- summary(prob.model)$standard.errors
 print(coef)
 print(std)
-print(coef / std)
+print(coef / std) #>2 ó <-2 es significativo
 
-
+# Si un cliente está activo, ¿cuanto gastará?
 # Modelo monetario. Tomamos únicamente aquellos clientes que han hecho una compra
 in_sample_purchased_2015 <- in_sample %>% 
   filter(active_2015 == 1) 

@@ -1,8 +1,13 @@
+##########################################################################
+# Jose Ramón Cajide, 2017-10
+# Customer Analytics: Segmentación de clientes
+##########################################################################
 
-# install.packages('tidyverse')
+if(!require(tidyverse)) { install.packages('tidyverse', dependencies = T) }
 library(tidyverse)
 
 if(!require(tidyr)) { install.packages('tidyr', dependencies = T) }
+library(tidyr)
 
 if(!require(sqldf)) { install.packages('sqldf', dependencies = T) }
 library(sqldf)
