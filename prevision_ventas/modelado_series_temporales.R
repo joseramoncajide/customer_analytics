@@ -1,3 +1,8 @@
+##########################################################################
+# Jose Ramón Cajide, 2017-10
+# Customer Analytics: Predicción de ingresos
+##########################################################################
+
 if(!require(tidyverse)) { install.packages('tidyverse', dependencies = T) }
 library(tidyverse)
 
@@ -11,7 +16,7 @@ if(!require(ISOweek)) { install.packages('ISOweek', dependencies = T) }
 library(ISOweek)
 
 # Cargamos los datos de compras en el data frame "data"
-data <- read_tsv("../segmentacion_de_clientes/purchases.txt", col_names = FALSE)
+data <- read_tsv("segmentacion_de_clientes/purchases.txt", col_names = FALSE)
 
 # Añadimos al data frame los nombres de las variables
 colnames(data) = c('customer_id', 'purchase_amount', 'date_of_purchase')
@@ -28,7 +33,7 @@ weekly_purchase_amount$revenue
 
 weekly_purchase_amount.ts <- ts(weekly_purchase_amount$revenue,frequency = 365.25/7, start = decimal_date(ymd("2005-01-02")))
 
-autoplot(weekly_purchase_amount.ts) + geom_forecast(h=5)
+autoplot(weekly_purchase_amount.ts) + labs(title="Ingresos semanales") + theme_minimal()
 
 seasonal_trend_irregular <- decompose(weekly_purchase_amount.ts)
 
