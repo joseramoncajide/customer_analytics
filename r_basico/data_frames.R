@@ -1,5 +1,5 @@
 ##########################################################################
-# Jose Ramón Cajide, 2017-10
+# Jose Cajide - @jrcajide
 # Customer Analytics: Data Frames
 ##########################################################################
 
@@ -127,8 +127,7 @@ gapminder %>%
 # mutate()
 
 gapminder %>% 
-  mutate(gdp = pop * gdpPercap,
-         prueba = row_number()) %>% View ()
+  mutate(gdp = pop * gdpPercap)
 
 
 # arrange
@@ -163,6 +162,7 @@ gapminder %>%
   group_by(country) %>% 
   # filter(country == "Burundi") %>% 
   select(country, year, lifeExp) %>% 
-  mutate(lifeExp_gain = lifeExp - first(lifeExp)) %>%  View()
+  mutate(lifeExp_gain = lifeExp - first(lifeExp))
+
 
 
