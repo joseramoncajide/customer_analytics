@@ -17,7 +17,7 @@ library(forecast)
 # Load data
 #----------------------------------------------------------------------------
 
-customers.df <- read_csv('./series_temporales/customers_by_cohort.csv')
+customers.df <- read_csv('series_temporales/customers_by_cohort.csv')
 
 # customers.df <- tail(customers.df, nrow(customers.df)-1)
 # 
