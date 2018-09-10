@@ -79,7 +79,7 @@ segmented_customers <- read_csv('segmented_customers.csv')
 
 segmented_customers_updated <- segmented_customers %>% 
   filter(customer_id %in% customers_in_new_transactions) %>% 
-  mutate(new_segment = cl_predict(segments, new_customers_scaled))
+  mutate(new_segment = cl_predict(modelo, new_customers_scaled))
 
 segmented_customers_updated
 
