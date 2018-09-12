@@ -22,28 +22,39 @@ library(tidyverse)
 library(survminer)
 library(caret)
 
-
 # Entendiendo el abandono de clientes. ¿Qué sucede? -----------------------
-
-
 
 # Carga de datos
 df <- read_csv('abandono_de_clientes/data/churn.csv')
 head(df,11)
 
+# Número de clientes
+nrow(df)
 
-# Curca de supervivencia
-fit <- survfit(Surv(time, churned) ~ 1, data = df)
+# Curva de supervivencia
+head(Surv(df$time, df$churned), 11)
+
+fit <- survfit(Surv(df$time, df$churned) ~ 1, data = df)
+summary(fit)
 
 ggsurvplot(fit)
 
 # Zoom
-g1 <- ggsurvplot(fit, 
-                 color = "#2E9FDF", 
-                 ylim=c(.75,1),
-                 xlab = 'Days since subscription', 
-                 ylab = '% Survival')
-g1
+ggsurvplot(fit, 
+           palette = "#2E9FDF", 
+           ylim=c(.75,1),
+           xlab = 'Días desde la subscripción', 
+           ylab = '% Supervivencia')
+
+ggsurvplot(fit, legend = "bottom", 
+           palette = "#2E9FDF", 
+           legend.title = "Todos los clientes",
+           conf.int = TRUE,
+           ylim=c(.75,1), lty = 1:2, mark.time = FALSE,
+           xlab = 'Días desde la subscripción', 
+           ylab = '% Supervivencia',
+           risk.table = TRUE, 
+           risk.table.y.text.col = T)
 
 
 # Segementación por sexo
@@ -51,25 +62,28 @@ fit2 <- survfit(Surv(time, churned) ~ gender, data = df)
 ggsurvplot(fit2)
 
 # Zoom
-g2 <- ggsurvplot(fit2, legend = "bottom", 
-                 legend.title = "Gender",
-                 conf.int = TRUE,
-                 pval = TRUE,
-                 ylim=c(.75,1), lty = 1:2, mark.time = FALSE,
-                 xlab = 'Days since subscription', ylab = '% Survival',
-                 legend.labs = c("Male", "Female"))
-g2
+ggsurvplot(fit2, 
+           palette = c("#2E9FDF","pink"), 
+           legend = "bottom", 
+           legend.title = "Género",
+           conf.int = TRUE,
+           pval = TRUE,
+           ylim=c(.75,1), lty = 1:2, mark.time = FALSE,
+           xlab = 'Días desde la subscripción', ylab = '% Supervivencia',
+           legend.labs = c("Hombres", "Mujeres"))
+
 
 # Añadir la tabla de riesgo
-g3 <- ggsurvplot(fit2, legend = "bottom", 
-                 legend.title = "Gender",
-                 conf.int = TRUE,
-                 pval = TRUE,
-                 ylim=c(.75,1), lty = 1:2, mark.time = FALSE,
-                 xlab = 'Days since subscription', ylab = '% Survival',
-                 legend.labs = c("Male", "Female"),
-                 risk.table = TRUE, risk.table.y.text.col = TRUE)
-g3
+ggsurvplot(fit2, 
+           palette = c("#2E9FDF","pink"), 
+           legend = "bottom", 
+           legend.title = "Género",
+           conf.int = TRUE,
+           pval = TRUE,
+           ylim=c(.75,1), lty = 1:2, mark.time = FALSE,
+           xlab = 'Días desde la subscripción', ylab = '% Supervivencia',
+           legend.labs = c("Hombres", "Mujeres"),
+           risk.table = TRUE, risk.table.y.text.col = TRUE) 
 
 
 
@@ -79,7 +93,10 @@ g3
 churn <- read.csv("abandono_de_clientes/data/historial_clientes.csv")
 head(churn)
 
-ggplot(churn, aes(x=Account.Length, fill=Churned))+geom_density()+ facet_grid(Churned ~ .) + labs(title="Account Length")
+ggplot(churn, aes(x=Account.Length, fill=Churned)) +
+  geom_density() + 
+  facet_grid(Churned ~ .) + 
+  labs(title="Duración de la subscripción del cliente")
 
 # Ej. Comprobar otras variables de manera similar a la anterior
 
@@ -109,10 +126,18 @@ control <- trainControl(method="cv", number=5, verboseIter = TRUE)
 model <- train(Churned~., data=churnTrain, method="rf", trControl=control)
 
 # https://docs.google.com/presentation/d/14ac22V-8Y-69JzBW8FGwxJGqpOhg00pLmdr86cAWFF8/edit#slide=id.p9
-confusionMatrix(model)
+confusionMatrix(model,positive="True.")
+
+
 
 pred <- predict(model, newdata=churnTest)
-confusionMatrix(pred, churnTest$Churned)
+
+# Cuántos han abandonado? (churnTest)
+table(churnTest$Churned)
+# Cuantos ha estimado el modelo?
+table(pred)
+
+confusionMatrix(pred, churnTest$Churned, positive="True.")
 
 # importancia de las variables
 importance <- varImp(model, scale=FALSE)
